@@ -1,0 +1,13 @@
+{
+  "name": "geogrid-review-ui",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Offline browser assets for the GeoGrid review interface.",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "konva": "10.3.1"
+  }
+}

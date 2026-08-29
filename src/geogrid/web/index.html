@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GeoGrid · 单图网格校核</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand-block">
+        <div class="brand-mark">G</div>
+        <div>
+          <h1>GeoGrid</h1>
+          <p>单图 · 区域优先人工校核</p>
+        </div>
+      </div>
+      <div class="summary-strip" aria-label="当前网格统计">
+        <span><strong id="accepted-node-count">—</strong> 已接受节点</span>
+        <span><strong id="pending-count">—</strong> 待决定项</span>
+        <span><strong id="region-progress">—</strong> 复核区</span>
+        <span class="save-state" id="save-state">正在载入…</span>
+      </div>
+      <div class="header-actions">
+        <button id="undo-button" class="ghost" title="撤销 (Ctrl+Z)">撤销</button>
+        <button id="redo-button" class="ghost" title="重做 (Ctrl+Y)">重做</button>
+        <button id="final-review-button" class="primary">确认整图审核</button>
+        <button id="export-button" class="accent">导出 ReviewedMesh</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="region-panel panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">REVIEW QUEUE</span>
+            <h2>复核区域</h2>
+          </div>
+          <button id="fit-image-button" class="icon-button" title="显示整图">全图</button>
+        </div>
+        <p class="panel-note">区域只用于查看和任务分组，不代表物理网格。</p>
+        <div id="region-list" class="region-list"></div>
+      </aside>
+
+      <section class="canvas-panel">
+        <div class="canvas-toolbar panel">
+          <div class="tool-group" role="group" aria-label="编辑工具">
+            <button class="tool active" data-mode="select">选择 / 移动</button>
+            <button class="tool" data-mode="add-node">新增节点</button>
+            <button class="tool" data-mode="edge">连接 / 断开边</button>
+          </div>
+          <div class="layer-switches">
+            <label><input id="show-image" type="checkbox" checked /> 原图</label>
+            <label><input id="show-clean" type="checkbox" checked /> 干净拓扑</label>
+            <label><input id="show-review" type="checkbox" checked /> 冲突层</label>
+            <label><input id="show-labels" type="checkbox" /> 行列号</label>
+          </div>
+          <div id="mode-hint" class="mode-hint">拖动节点可修正坐标</div>
+        </div>
+        <div id="canvas-shell" class="canvas-shell">
+          <div id="canvas-container"></div>
+          <div id="canvas-loading" class="canvas-loading">正在读取归一化照片和拓扑…</div>
+          <div class="zoom-help">滚轮缩放 · 空格/右键拖动画布 · 坐标始终为 EXIF 转正后的全图像素</div>
+        </div>
+      </section>
+
+      <aside class="inspector-panel panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">INSPECTOR</span>
+            <h2>当前对象</h2>
+          </div>
+        </div>
+        <div id="region-action" class="region-action"></div>
+        <div id="inspector" class="inspector empty">
+          <p>选择节点或边后，可修改审核状态与格网索引。</p>
+        </div>
+        <div class="legend">
+          <h3>图层说明</h3>
+          <div><i class="dot accepted"></i> 当前接受</div>
+          <div><i class="dot pending"></i> 待确认，建议保留</div>
+          <div><i class="dot suggest-reject"></i> 待确认，建议排除</div>
+          <div><i class="dot rejected"></i> 已排除</div>
+          <p>“接受本区当前建议”会确认黄色保留建议并排除红色冲突建议；整步可撤销。</p>
+        </div>
+        <div id="readiness" class="readiness"></div>
+      </aside>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/static/vendor/konva.min.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
